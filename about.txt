@@ -1,8 +1,26 @@
-about me
- HEAD
+# Sử dụng Python 3.7 làm base image
+FROM python:3.7
 
-ecececce
+# Cập nhật gói và cài đặt PostgreSQL client
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+    postgresql-client \
+    && rm -rf /var/lib/apt/lists/*
 
-hello fen
-xsaXSAXS
-safsafsfs
+# Đặt thư mục làm việc bên trong container
+WORKDIR /usr/src/app
+
+# Sao chép file yêu cầu (requirements.txt) vào container
+COPY requirements.txt ./
+
+# Cài đặt các thư viện Python trong requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Sao chép toàn bộ mã nguồn vào container
+COPY . .
+
+# Mở cổng 8000 cho ứng dụng
+EXPOSE 8000
+
+# Lệnh chạy ứng dụng Django
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
