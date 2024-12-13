@@ -1,9 +1,7 @@
 FROM python:3.7
 
 # Cài đặt các gói cần thiết
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-    postgresql-client \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Thiết lập thư mục làm việc
@@ -21,5 +19,5 @@ COPY . .
 # Mở cổng 5000
 EXPOSE 5000
 
-# Lệnh khởi chạy ứng dụng
-CMD ["python", "manage.py", "runserver", "0.0.0.0:5000"]
+# Lệnh khởi chạy server cơ bản
+CMD ["python", "manage.py"]
