@@ -1,34 +1,37 @@
-# Sử dụng Python 3.7 làm base image
 FROM python:3.7
 
-# Cập nhật gói và cài đặt PostgreSQL client
+# Cài đặt PostgreSQL client
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-    postgresql-client \
+    && apt-get install -y --no-install-recommends postgresql-client \
     && rm -rf /var/lib/apt/lists/*
 
-# Đặt thư mục làm việc bên trong container
+# Thiết lập thư mục làm việc
 WORKDIR /usr/src/app
 
-# Sao chép file yêu cầu (requirements.txt) vào container
+# Copy file requirements.txt để cài đặt dependencies
 COPY requirements.txt ./
 
-# Cài đặt các thư viện Python trong requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+# Cài đặt dependencies
+RUN pip install -r requirements.txt
 
-# Sao chép toàn bộ mã nguồn vào container
+# Copy toàn bộ mã nguồn vào container
 COPY . .
 
-# Mở cổng 8000 cho ứng dụng
-EXPOSE 8000
+# Expose port 5000
+EXPOSE 5000
 
-# Lệnh chạy ứng dụng Django
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
-
-
+# Chạy ứng dụng trên port 5000
+CMD ["python", "manage.py", "runserver", "0.0.0.0:5000"]
 
 
 
-docker build -t python-app .
-docker run -d -p 8000:8000 python-app
+#urls
+from django.http import HttpResponse
+from django.urls import path
 
+def hello_view(request):
+    return HttpResponse("Hello, world!")
+
+urlpatterns = [
+    path('', hello_view),  # Truy cập vào đường dẫn gốc sẽ hiển thị "Hello"
+]
